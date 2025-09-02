@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class OrderController {
     private final OrderService orderService;
 
+    @GetMapping("/test")
+    public String hello(){
+        return orderService.hello();
+    }
+
     @PostMapping
     public HttpEntity<?> create(@Valid @RequestBody OrderRequestDto dto) {
         Response response = orderService.create(dto);

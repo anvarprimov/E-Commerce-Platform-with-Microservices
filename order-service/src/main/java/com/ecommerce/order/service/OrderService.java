@@ -1,5 +1,6 @@
 package com.ecommerce.order.service;
 
+import com.ecommerce.order.client.UserServiceClient;
 import com.ecommerce.order.dto.OrderRequestDto;
 import com.ecommerce.order.dto.OrderResponseDto;
 import com.ecommerce.order.dto.PageResponse;
@@ -9,6 +10,7 @@ import com.ecommerce.order.enums.OrderStatus;
 import com.ecommerce.order.mapper.OrderMapper;
 import com.ecommerce.order.repo.OrderItemRepository;
 import com.ecommerce.order.repo.OrderRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,12 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final UserServiceClient userServiceClient;
+
+//    @CircuitBreaker(name = "productService")
+    public String hello(){
+        return userServiceClient.hello();
+    }
 
     public Response create(OrderRequestDto dto) {
 
