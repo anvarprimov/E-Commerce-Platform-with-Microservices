@@ -47,6 +47,14 @@ services:
       - 9411:9411
     networks:
       - ecommerce
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - ecommerce
+    restart: unless-stopped
 
 
 networks:

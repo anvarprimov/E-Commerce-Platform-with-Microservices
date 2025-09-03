@@ -23,7 +23,7 @@ public class OrderController {
     }
     @GetMapping("/limit")
     public String limit(){
-        return orderService.hello();
+        return orderService.limit();
     }
 
     @PostMapping

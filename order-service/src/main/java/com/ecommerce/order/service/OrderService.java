@@ -35,7 +35,7 @@ public class OrderService {
     }
 
     //    @CircuitBreaker(name = "productService")
-    @RateLimiter(name = "rateLimit", fallbackMethod = "helloFallback")
+//    @RateLimiter(name = "rateLimit", fallbackMethod = "helloFallback")
     public String limit(){
         return "limit";
     }
