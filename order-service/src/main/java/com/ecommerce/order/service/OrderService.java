@@ -11,6 +11,7 @@ import com.ecommerce.order.mapper.OrderMapper;
 import com.ecommerce.order.repo.OrderItemRepository;
 import com.ecommerce.order.repo.OrderRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,9 +29,18 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final UserServiceClient userServiceClient;
 
-//    @CircuitBreaker(name = "productService")
+        @CircuitBreaker(name = "productService")
     public String hello(){
         return userServiceClient.hello();
+    }
+
+    //    @CircuitBreaker(name = "productService")
+    @RateLimiter(name = "rateLimit", fallbackMethod = "helloFallback")
+    public String limit(){
+        return "limit";
+    }
+    public String helloFallback(Exception e){
+        return "fall";
     }
 
     public Response create(OrderRequestDto dto) {

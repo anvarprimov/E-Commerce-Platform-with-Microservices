@@ -21,6 +21,10 @@ public class OrderController {
     public String hello(){
         return orderService.hello();
     }
+    @GetMapping("/limit")
+    public String limit(){
+        return orderService.hello();
+    }
 
     @PostMapping
     public HttpEntity<?> create(@Valid @RequestBody OrderRequestDto dto) {
