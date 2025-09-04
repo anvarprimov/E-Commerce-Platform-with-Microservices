@@ -13,12 +13,15 @@ import com.ecommerce.order.repo.OrderRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -27,9 +30,17 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
+    private final RabbitTemplate rabbitTemplate;
     private final UserServiceClient userServiceClient;
 
-        @CircuitBreaker(name = "productService")
+    @Value("${rabbitmq.exchange.name}")
+    private String exchangeName;
+
+    @Value("${rabbitmq.routing.key}")
+    private String routingKey;
+
+
+    @CircuitBreaker(name = "productService")
     public String hello(){
         return userServiceClient.hello();
     }
@@ -37,6 +48,10 @@ public class OrderService {
     //    @CircuitBreaker(name = "productService")
 //    @RateLimiter(name = "rateLimit", fallbackMethod = "helloFallback")
     public String limit(){
+        rabbitTemplate.convertAndSend(
+                exchangeName,
+                routingKey,
+                Map.of("orderId", "1", "status", "created"));
         return "limit";
     }
     public String helloFallback(Exception e){

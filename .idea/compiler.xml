@@ -8,8 +8,8 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
-        <module name="discovery" />
         <module name="configserver" />
+        <module name="discovery" />
       </profile>
       <profile name="Annotation profile for cart-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -31,6 +31,15 @@
         </processorPath>
         <module name="order-service" />
       </profile>
+      <profile name="Annotation profile for notification-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="notification-service" />
+      </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
@@ -39,6 +48,7 @@
       <module name="cart-service" options="-parameters" />
       <module name="configserver" options="-parameters" />
       <module name="discovery" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
       <module name="order-service" options="-parameters" />
       <module name="product-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
