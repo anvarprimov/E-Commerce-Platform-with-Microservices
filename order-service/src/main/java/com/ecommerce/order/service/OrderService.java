@@ -60,6 +60,12 @@ public class OrderService {
 
     public Response create(OrderRequestDto dto) {
 
+        /**
+         * todo create method
+         */
+        rabbitTemplate.convertAndSend(
+                routingKey,
+                dto);
         return null;
     }
 
