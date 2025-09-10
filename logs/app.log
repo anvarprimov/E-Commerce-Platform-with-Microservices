@@ -341,3 +341,16 @@ com.netflix.discovery.shared.transport.TransportException: Cannot execute reques
 2025-09-10T15:03:13.462-04:00  INFO 6852 --- [user-service] [http-nio-8081-exec-1] [68c1cb71e008784284d0f0c5ce37162f-84d0f0c5ce37162f] c.e.user.controller.UserController       : created : info
 2025-09-10T15:03:13.466-04:00  WARN 6852 --- [user-service] [http-nio-8081-exec-1] [68c1cb71e008784284d0f0c5ce37162f-84d0f0c5ce37162f] c.e.user.controller.UserController       : created : warn
 2025-09-10T15:03:13.466-04:00 ERROR 6852 --- [user-service] [http-nio-8081-exec-1] [68c1cb71e008784284d0f0c5ce37162f-84d0f0c5ce37162f] c.e.user.controller.UserController       : created : error
+2025-09-10T15:05:11.273-04:00  INFO 6852 --- [user-service] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-09-10T15:05:36.881-04:00  INFO 6852 --- [user-service] [http-nio-8081-exec-9] [68c1cc006cf4acb57ba85cb05c145553-7ba85cb05c145553] c.e.user.controller.UserController       : created : info
+2025-09-10T15:05:36.882-04:00  WARN 6852 --- [user-service] [http-nio-8081-exec-9] [68c1cc006cf4acb57ba85cb05c145553-7ba85cb05c145553] c.e.user.controller.UserController       : created : warn
+2025-09-10T15:05:36.884-04:00 ERROR 6852 --- [user-service] [http-nio-8081-exec-9] [68c1cc006cf4acb57ba85cb05c145553-7ba85cb05c145553] c.e.user.controller.UserController       : created : error
+2025-09-10T15:05:48.645-04:00  INFO 6852 --- [user-service] [http-nio-8081-exec-7] [68c1cc0c7f72bd1eac136b26e66e5a35-ac136b26e66e5a35] c.e.user.controller.UserController       : created : info
+2025-09-10T15:05:48.646-04:00  WARN 6852 --- [user-service] [http-nio-8081-exec-7] [68c1cc0c7f72bd1eac136b26e66e5a35-ac136b26e66e5a35] c.e.user.controller.UserController       : created : warn
+2025-09-10T15:05:48.647-04:00 ERROR 6852 --- [user-service] [http-nio-8081-exec-7] [68c1cc0c7f72bd1eac136b26e66e5a35-ac136b26e66e5a35] c.e.user.controller.UserController       : created : error
+2025-09-10T15:10:11.298-04:00  INFO 6852 --- [user-service] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-09-10T15:15:11.328-04:00  INFO 6852 --- [user-service] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2025-09-10T15:19:24.736-04:00  INFO 6852 --- [user-service] [http-nio-8081-exec-8] [68c1cf3cd96cfd9429ea0d18cdf45d1e-29ea0d18cdf45d1e] c.e.user.controller.UserController       : created : info
+2025-09-10T15:19:24.743-04:00  WARN 6852 --- [user-service] [http-nio-8081-exec-8] [68c1cf3cd96cfd9429ea0d18cdf45d1e-29ea0d18cdf45d1e] c.e.user.controller.UserController       : created : warn
+2025-09-10T15:19:24.744-04:00 ERROR 6852 --- [user-service] [http-nio-8081-exec-8] [68c1cf3cd96cfd9429ea0d18cdf45d1e-29ea0d18cdf45d1e] c.e.user.controller.UserController       : created : error
+2025-09-10T15:20:11.344-04:00  INFO 6852 --- [user-service] [AsyncResolver-bootstrap-executor-%d] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
