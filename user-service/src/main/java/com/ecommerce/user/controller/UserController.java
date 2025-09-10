@@ -42,6 +42,11 @@ public class UserController {
         Response response = service.register(dto);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
+    @PostMapping("/admin")
+    public HttpEntity<?> add(@RequestBody UserRequestDto dto) {
+        Response response = service.add(dto);
+        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
+    }
 
     // admin
     @GetMapping("/admin")

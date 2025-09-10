@@ -27,6 +27,13 @@ public class UserService {
         return new Response(true, "USER SAVED");
     }
 
+    public Response add(UserRequestDto dto) {
+        if(repository.existsByEmail(dto.getEmail()))
+            return new Response(false, "EMAIL ALREADY EXISTS");
+        repository.save(mapper.toUser(dto));
+        return new Response(true, "USER SAVED");
+    }
+
     public PageResponse getAllUsers(int page, int size, Boolean active, String sortField) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, sortField);
         Page<User> usersPage;
