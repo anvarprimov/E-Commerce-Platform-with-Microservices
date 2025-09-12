@@ -13,7 +13,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +28,10 @@ public class KeycloakAdminService {
     private  String realm;
     @Value("${keycloak.admin.clientId}")
     private  String clientId;
+    @Value("${keycloak.admin.clientUuid}")
+    private  String clientUuid;
+    @Value("${keycloak.admin.defaultRole}")
+    private  String defaultRole;
 
     public String getAdminAccessToken() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -81,5 +84,32 @@ public class KeycloakAdminService {
         URI location = response.getHeaders().getLocation();
         String path = location.getPath();
         return path.substring(path.lastIndexOf("/") + 1);
+    }
+
+    private Map<String, Object> getRealmRoleRepresentation(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = serverUrl + "/admin/realms/" + realm + "/clients/" + clientUuid + "/roles/" + defaultRole;
+        ResponseEntity<Map> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                Map.class);
+        return response.getBody();
+    }
+
+    public boolean assignRealmRoleToUser(String token, String userId) {
+        Map<String, Object> roleRep = getRealmRoleRepresentation(token);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<List<Map<String, Object>>> entity = new HttpEntity<>(List.of(roleRep), headers);
+        String url = serverUrl + "/admin/realms/" + realm + "/users/" + userId + "/role-mappings/clients/" + clientUuid;
+
+        ResponseEntity<Void> response = restTemplate.postForEntity(url, entity, Void.class);
+        return response.getStatusCode().is2xxSuccessful();
     }
 }
