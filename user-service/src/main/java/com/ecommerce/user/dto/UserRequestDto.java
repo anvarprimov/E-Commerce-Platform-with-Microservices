@@ -15,6 +15,12 @@ public class UserRequestDto {
     private String email;
 
     @NotBlank @Size(max = 100)
+    private String username;
+
+    @NotBlank @Size(max = 100)
+    private String password;
+
+    @NotBlank @Size(max = 100)
     private String firstName;
 
     @NotBlank @Size(max = 100)

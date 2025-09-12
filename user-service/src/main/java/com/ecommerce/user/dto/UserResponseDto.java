@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 public class UserResponseDto {
     private Long id;
     private String email;
+    private String keycloakId;
     private String firstName;
     private String lastName;
     private String phone;

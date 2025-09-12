@@ -19,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
+    private final KeycloakAdminService keycloakAdminService;
     private final UserMapper mapper;
     public Response register(UserRequestDto dto) {
         if(repository.existsByEmail(dto.getEmail()))
@@ -30,11 +31,17 @@ public class UserService {
     public Response add(UserRequestDto dto) {
         if(repository.existsByEmail(dto.getEmail()))
             return new Response(false, "EMAIL ALREADY EXISTS");
-        repository.save(mapper.toUser(dto));
+        String token = keycloakAdminService.getAdminAccessToken();
+        String keycloakId = keycloakAdminService.createUser(token, dto);
+        User user = mapper.toUser(dto);
+        user.setKeycloakId(keycloakId);
+        repository.save(user);
         return new Response(true, "USER SAVED");
     }
 
     public PageResponse getAllUsers(int page, int size, Boolean active, String sortField) {
+        if (sortField == null || sortField.isBlank())
+            sortField = "id";
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, sortField);
         Page<User> usersPage;
         if (active == null) {

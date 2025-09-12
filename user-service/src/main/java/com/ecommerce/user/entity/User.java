@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -22,6 +23,8 @@ public class User {
 
     @Column(nullable = false, length = 254, unique = true)
     private String email;
+    @Column(nullable = false, unique = true)
+    private String keycloakId;
 
     @Column(nullable = false, length = 100)
     private String firstName;
