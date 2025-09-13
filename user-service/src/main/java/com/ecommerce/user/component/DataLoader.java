@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DataLoader implements CommandLineRunner {
     @Value("${spring.sql.init.mode}")
-    private final String initMode;
+    private String initMode;
     @Override
     public void run(String... args) throws Exception {
         if (initMode.equals("always")) {

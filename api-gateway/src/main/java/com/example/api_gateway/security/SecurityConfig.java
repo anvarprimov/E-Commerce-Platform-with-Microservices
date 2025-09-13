@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -26,10 +25,12 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers("/api/users/**").hasRole("USER")
-                        .pathMatchers("/api/product/**").hasRole("PROdUCT")
-                        .pathMatchers("/api/orders/**").hasRole("ORDER")
-                        .anyExchange().authenticated())
+//                        .pathMatchers("/api/users/**").hasRole("USER")
+//                        .pathMatchers("/api/product/**").hasRole("PROdUCT")
+//                        .pathMatchers("/api/orders/**").hasRole("ORDER")
+                        .pathMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+//                        .anyExchange().authenticated()
+                        .anyExchange().permitAll())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtract())))
                 .build();
     }
