@@ -6,6 +6,7 @@ import com.ecommerce.order.dto.Response;
 import com.ecommerce.order.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +17,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
+    @Value("${server.port}")
+    private String port;
 
     @GetMapping("/test")
-    public String hello(){
-        return orderService.hello();
-    }
-    @GetMapping("/limit")
-    public String limit(){
-        return orderService.limit();
+    public String test() {
+        return "order port: " + port;
     }
 
     @PostMapping

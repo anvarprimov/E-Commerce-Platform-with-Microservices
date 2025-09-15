@@ -42,18 +42,13 @@ public class OrderService {
 
     @CircuitBreaker(name = "productService")
     public String hello(){
+        /*rabbitTemplate.convertAndSend(
+                exchangeName,
+                routingKey,
+                Map.of("orderId", "1", "status", "created"));*/
         return userServiceClient.hello();
     }
 
-    //    @CircuitBreaker(name = "productService")
-//    @RateLimiter(name = "rateLimit", fallbackMethod = "helloFallback")
-    public String limit(){
-        rabbitTemplate.convertAndSend(
-                exchangeName,
-                routingKey,
-                Map.of("orderId", "1", "status", "created"));
-        return "limit";
-    }
     public String helloFallback(Exception e){
         return "fall";
     }

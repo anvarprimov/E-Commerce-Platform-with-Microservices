@@ -26,10 +26,8 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeExchange(exchange -> exchange
-//                        .pathMatchers("/api/users/**").hasRole("USER")
-//                        .pathMatchers("/api/product/**").hasRole("PROdUCT")
-//                        .pathMatchers("/api/orders/**").hasRole("ORDER")
-                        .pathMatchers("/v3/api-docs/**",
+                        .pathMatchers(
+                                "/v3/api-docs/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/user/v3/api-docs/**",
@@ -37,6 +35,9 @@ public class SecurityConfig {
                                 "/cart/v3/api-docs/**",
                                 "/order/v3/api-docs/**",
                                 "/notification/v3/api-docs/**").permitAll()
+                        .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
+                        .pathMatchers("/admin/**").hasRole( "ADMIN")
+                        .pathMatchers("/api").denyAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtract())))
                 .build();

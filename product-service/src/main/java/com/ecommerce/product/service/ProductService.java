@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,7 +28,7 @@ public class ProductService {
     }
 
     public PageResponse search(String key, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, "id");
         Page<Product> productPage;
         if(key == null || key.isBlank())
             productPage = repository.findAll(pageable);

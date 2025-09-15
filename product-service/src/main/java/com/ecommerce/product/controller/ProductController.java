@@ -17,6 +17,13 @@ import org.springframework.web.bind.annotation.*;
 @RefreshScope
 public class ProductController {
    private final ProductService service;
+   @Value("${server.port}")
+   private String port;
+
+   @GetMapping("/test")
+   public String test() {
+      return "product port: " + port;
+   }
 
 //   @GetMapping
 //   public Page<ProductResponseDto> list(
@@ -33,7 +40,7 @@ public class ProductController {
 
    @GetMapping("/search")
    public PageResponse search(
-           @RequestParam String key,
+           @RequestParam(required = false) String key,
            @RequestParam(defaultValue="0") int page,
            @RequestParam(defaultValue="20") int size
    ) {

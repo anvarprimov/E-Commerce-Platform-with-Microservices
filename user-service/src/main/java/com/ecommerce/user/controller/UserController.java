@@ -4,9 +4,6 @@ import com.ecommerce.user.dto.Response;
 import com.ecommerce.user.dto.UserRequestDto;
 import com.ecommerce.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
@@ -17,24 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @RefreshScope
-@Slf4j
 public class UserController {
     private final UserService service;
-//    private final Logger logger = LoggerFactory.getLogger(UserController.class);
-    @Value("${build.id:default}")
-    private String id;
-    @Value("${build.name:default}")
-    private String name;
-    @Value("${build.version:default}")
-    private String version;
+    @Value("${server.port}")
+    private String port;
     @GetMapping("/test")
     public String hello() {
-        log.info("created : {}", "info");
-        log.warn("created : {}", "warn");
-        log.error("created : {}", "error");
-        log.trace("created : {}", "trace");
-        log.debug("created : {}", "debug");
-        return "id: " + id + " version: " + version + " name: " + name;
+        return "user port: " + port;
     }
     // Registration (public)
     @PostMapping

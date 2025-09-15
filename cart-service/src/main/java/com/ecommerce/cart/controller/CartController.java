@@ -5,6 +5,7 @@ import com.ecommerce.cart.dto.Response;
 import com.ecommerce.cart.service.CartService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
 
     private final CartService service;
+    @Value("${server.port}")
+    private String port;
+
+    @GetMapping("/test")
+    public String test() {
+        return "cart port: " + port;
+    }
 
     // In real app, resolve from security context
     /*private Long resolveUserId(HttpServletRequest req) {
