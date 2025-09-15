@@ -24,13 +24,20 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeExchange(exchange -> exchange
 //                        .pathMatchers("/api/users/**").hasRole("USER")
 //                        .pathMatchers("/api/product/**").hasRole("PROdUCT")
 //                        .pathMatchers("/api/orders/**").hasRole("ORDER")
-                        .pathMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-//                        .anyExchange().authenticated()
-                        .anyExchange().permitAll())
+                        .pathMatchers("/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/user/v3/api-docs/**",
+                                "/product/v3/api-docs/**",
+                                "/cart/v3/api-docs/**",
+                                "/order/v3/api-docs/**",
+                                "/notification/v3/api-docs/**").permitAll()
+                        .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtract())))
                 .build();
     }
@@ -44,8 +51,6 @@ public class SecurityConfig {
                     .flatMap(entry -> ((Map<String, List<String>>) entry.getValue())
                             .get("roles").stream())
                     .toList();
-//            todo delete
-            System.out.println("roles: " + roles);
 
             return Flux.fromIterable(roles)
                     .map(role -> new SimpleGrantedAuthority("ROLE_" + role));
