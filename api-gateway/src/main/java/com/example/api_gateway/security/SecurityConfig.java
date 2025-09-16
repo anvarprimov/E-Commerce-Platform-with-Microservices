@@ -39,7 +39,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                         .pathMatchers("/admin/**").hasRole( "ADMIN")
-                        .pathMatchers("/api").denyAll()
+                        .pathMatchers("/api/**", "/admin/**").denyAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtract())))
                 .build();
