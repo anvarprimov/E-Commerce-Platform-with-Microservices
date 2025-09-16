@@ -23,35 +23,9 @@ public class UserController {
         return "user port: " + port;
     }
     // Registration (public)
-    @PostMapping
+    @PostMapping("/register")
     public HttpEntity<?> register(@RequestBody UserRequestDto dto) {
         Response response = service.register(dto);
-        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
-    }
-    @PostMapping("/admin")
-    public HttpEntity<?> add(@RequestBody UserRequestDto dto) {
-        Response response = service.add(dto);
-        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
-    }
-
-    // admin
-    @GetMapping("/admin")
-    public HttpEntity<?> adminList(@RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "20") int size,
-                                   @RequestParam(required = false) Boolean active,
-                                   @RequestParam(required = false) String  sort) {
-        return ResponseEntity.ok(service.getAllUsers(page, size, active, sort));
-    }
-
-    @GetMapping("/admin/{id}")
-    public HttpEntity<?> adminGet(@PathVariable Long id) {
-        Response response = service.getOneUser(id);
-        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
-    }
-
-    @DeleteMapping("/admin/{id}")
-    public HttpEntity<?> adminDelete(@PathVariable Long id) {
-        Response response = service.deleteUserByAdmin(id);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 

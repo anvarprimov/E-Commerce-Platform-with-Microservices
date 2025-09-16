@@ -44,27 +44,37 @@ public class GatewayConfig {
                 .route("eureka-static", r -> r
                         .path("/eureka/**")
                         .uri("http://localhost:8761"))
+
                 .route("user-service", r -> r
                         .path("/api/users/**")
+                        .uri("lb://USER-SERVICE"))
+                .route("user-service-admin", r -> r
+                        .path("/admin/users/**")
                         .uri("lb://USER-SERVICE"))
                 .route("user-service-docs", r -> r
                         .path("/user/v3/api-docs")
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://USER-SERVICE"))
+
                 .route("product-service", r -> r
                         .path("/api/products/**")
+                        .uri("lb://PRODUCT-SERVICE"))
+                .route("product-service-admin", r -> r
+                        .path("/admin/products/**")
                         .uri("lb://PRODUCT-SERVICE"))
                 .route("product-service-docs", r -> r
                         .path("/product/v3/api-docs")
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://PRODUCT-SERVICE"))
-                .route("cart-service", r -> r
+
+                .route("cart-service-", r -> r
                         .path("/api/carts/**")
                         .uri("lb://CART-SERVICE"))
                 .route("cart-service-docs", r -> r
                         .path("/cart/v3/api-docs")
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://CART-SERVICE"))
+
                 .route("order-service", r -> r
                         .path("/api/orders/**")
                         .filters(f -> f.requestRateLimiter(config -> config.
@@ -75,6 +85,7 @@ public class GatewayConfig {
                         .path("/order/v3/api-docs")
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://ORDER-SERVICE"))
+
                 .route("notification-service", r -> r
                         .path("/api/notifications/**")
                         .uri("lb://NOTIFICATION-SERVICE"))

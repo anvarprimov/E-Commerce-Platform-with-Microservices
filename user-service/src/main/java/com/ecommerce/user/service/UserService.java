@@ -22,18 +22,20 @@ public class UserService {
     private final KeycloakAdminService keycloakAdminService;
     private final UserMapper mapper;
     public Response register(UserRequestDto dto) {
-        if(repository.existsByEmail(dto.getEmail()))
-            return new Response(false, "EMAIL ALREADY EXISTS");
-        repository.save(mapper.toUser(dto));
-        return new Response(true, "USER SAVED");
+        String role = "USER";
+        return addUserWithRole(dto, role);
     }
 
     public Response add(UserRequestDto dto) {
+        String role = "ADMIN";
+        return addUserWithRole(dto, role);
+    }
+    public Response addUserWithRole(UserRequestDto dto, String role) {
         if(repository.existsByEmail(dto.getEmail()))
             return new Response(false, "EMAIL ALREADY EXISTS");
         String token = keycloakAdminService.getAdminAccessToken();
         String keycloakId = keycloakAdminService.createUser(token, dto);
-        boolean assignRealmRoleToUser = keycloakAdminService.assignRealmRoleToUser(token, keycloakId, "USER");
+        boolean assignRealmRoleToUser = keycloakAdminService.assignRealmRoleToUser(token, keycloakId, role);
         if (!assignRealmRoleToUser)
             return new Response(false, "could not assign a role");
         User user = mapper.toUser(dto);
@@ -65,7 +67,7 @@ public class UserService {
         return optionalUser.map(user -> new Response(true, mapper.toUserResponseDto(user))).orElseGet(() -> new Response(false, "USER NOT FOUND"));
     }
 
-    public Response deleteUserByAdmin(Long id) {
+    public Response delete(Long id) {
         Optional<User> optionalUser = repository.findById(id);
         if(optionalUser.isEmpty())
             return new Response(false, "USER NOT FOUND");

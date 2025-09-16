@@ -34,7 +34,9 @@ public class SecurityConfig {
                                 "/product/v3/api-docs/**",
                                 "/cart/v3/api-docs/**",
                                 "/order/v3/api-docs/**",
-                                "/notification/v3/api-docs/**").permitAll()
+                                "/notification/v3/api-docs/**",
+                                "/api/users/register"
+                        ).permitAll()
                         .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                         .pathMatchers("/admin/**").hasRole( "ADMIN")
                         .pathMatchers("/api").denyAll()
