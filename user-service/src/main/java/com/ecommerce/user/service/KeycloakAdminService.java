@@ -30,8 +30,6 @@ public class KeycloakAdminService {
     private  String clientId;
     @Value("${keycloak.admin.clientUuid}")
     private  String clientUuid;
-    @Value("${keycloak.admin.defaultRole}")
-    private  String defaultRole;
 
     public String getAdminAccessToken() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -86,12 +84,12 @@ public class KeycloakAdminService {
         return path.substring(path.lastIndexOf("/") + 1);
     }
 
-    private Map<String, Object> getRealmRoleRepresentation(String token) {
+    private Map<String, Object> getRealmRoleRepresentation(String token, String role) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = serverUrl + "/admin/realms/" + realm + "/clients/" + clientUuid + "/roles/" + defaultRole;
+        String url = serverUrl + "/admin/realms/" + realm + "/clients/" + clientUuid + "/roles/" + role;
         ResponseEntity<Map> response = restTemplate.exchange(
                 url,
                 HttpMethod.GET,
@@ -100,8 +98,8 @@ public class KeycloakAdminService {
         return response.getBody();
     }
 
-    public boolean assignRealmRoleToUser(String token, String userId) {
-        Map<String, Object> roleRep = getRealmRoleRepresentation(token);
+    public boolean assignRealmRoleToUser(String token, String userId, String role) {
+        Map<String, Object> roleRep = getRealmRoleRepresentation(token, role);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);

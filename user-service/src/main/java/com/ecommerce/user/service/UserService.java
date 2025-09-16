@@ -33,7 +33,7 @@ public class UserService {
             return new Response(false, "EMAIL ALREADY EXISTS");
         String token = keycloakAdminService.getAdminAccessToken();
         String keycloakId = keycloakAdminService.createUser(token, dto);
-        boolean assignRealmRoleToUser = keycloakAdminService.assignRealmRoleToUser(token, keycloakId);
+        boolean assignRealmRoleToUser = keycloakAdminService.assignRealmRoleToUser(token, keycloakId, "USER");
         if (!assignRealmRoleToUser)
             return new Response(false, "could not assign a role");
         User user = mapper.toUser(dto);
