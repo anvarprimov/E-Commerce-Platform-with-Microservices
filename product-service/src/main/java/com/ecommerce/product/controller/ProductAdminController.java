@@ -2,6 +2,7 @@ package com.ecommerce.product.controller;
 
 import com.ecommerce.product.dto.ProductRequestDto;
 import com.ecommerce.product.dto.Response;
+import com.ecommerce.product.dto.StockRequestDto;
 import com.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,12 @@ public class ProductAdminController {
    @PutMapping("/restore/{id}")
    public HttpEntity<?> restore(@PathVariable Long id) {
       Response response = service.restore(id);
+      return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
+   }
+
+   @PostMapping("/stock")
+   public HttpEntity<?> addToStock(@RequestBody StockRequestDto stockRequestDto) {
+      Response response = service.addToStock(stockRequestDto);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }
 

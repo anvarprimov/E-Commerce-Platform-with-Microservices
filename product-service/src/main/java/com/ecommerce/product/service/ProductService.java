@@ -111,4 +111,18 @@ public class ProductService {
         productRepository.saveAll(productList);
         return new Response(true, "SUCCESS");
     }
+
+    public Response addToStock(StockRequestDto requestDto) {
+        List<Product> productList = new ArrayList<>();
+        for (StockUnitRequestDto dto : requestDto.getStockUnitRequestDtoList()) {
+            Optional<Product> optionalProduct = productRepository.findById(dto.getProductId());
+            if (optionalProduct.isEmpty())
+                return new Response(false, dto.getProductId() + " PRODUCT NOT FOUND");
+            Product product = optionalProduct.get();
+            product.setQuantity(product.getQuantity() + dto.getQuantity());
+            productList.add(product);
+        }
+        productRepository.saveAll(productList);
+        return new Response(true, "SUCCESS");
+    }
 }
