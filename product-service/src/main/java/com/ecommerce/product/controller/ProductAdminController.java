@@ -5,6 +5,7 @@ import com.ecommerce.product.dto.Response;
 import com.ecommerce.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductAdminController {
    private final ProductService service;
+   @Value("${server.port}")
+   private String port;
+
+   @GetMapping("/test")
+   public String test() {
+      return "product admin port: " + port;
+   }
 
    @PostMapping
    public HttpEntity<?> create(@Valid @RequestBody ProductRequestDto dto) {
@@ -32,7 +40,7 @@ public class ProductAdminController {
       Response response = service.softDelete(id);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);}
 
-   @PostMapping("/{id}/restore")
+   @PutMapping("/restore/{id}")
    public HttpEntity<?> restore(@PathVariable Long id) {
       Response response = service.restore(id);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);

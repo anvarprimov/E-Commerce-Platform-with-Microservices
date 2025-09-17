@@ -45,14 +45,8 @@ public class UserService {
     }
 
     public PageResponse getAllUsers(int page, int size, Boolean active, String sortField) {
-        if (sortField == null || sortField.isBlank())
-            sortField = "id";
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC, sortField);
-        Page<User> usersPage;
-        if (active == null) {
-            usersPage = repository.findAll(pageable);
-        } else
-            usersPage = repository.findAllByActive(active, pageable);
+        Page<User> usersPage = repository.findAllByActive(active, pageable);
         return new PageResponse(
                 mapper.toUserResponseDtoList(usersPage.getContent()),
                 usersPage.getNumber(),

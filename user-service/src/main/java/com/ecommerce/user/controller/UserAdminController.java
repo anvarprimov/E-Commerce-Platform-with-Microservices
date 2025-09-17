@@ -32,8 +32,8 @@ public class UserAdminController {
     @GetMapping
     public HttpEntity<?> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "20") int size,
-                                   @RequestParam(required = false) Boolean active,
-                                   @RequestParam(required = false) String  sort) {
+                                   @RequestParam(defaultValue = "true") Boolean active,
+                                   @RequestParam(defaultValue = "id") String  sort) {
         return ResponseEntity.ok(service.getAllUsers(page, size, active, sort));
     }
 
