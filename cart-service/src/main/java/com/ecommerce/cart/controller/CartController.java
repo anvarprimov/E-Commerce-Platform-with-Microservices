@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,25 +27,23 @@ public class CartController {
         return "cart port: " + port;
     }
 
-    // In real app, resolve from security context
-    /*private Long resolveUserId(HttpServletRequest req) {
-        return Long.valueOf(req.getHeader("X-User-Id"));
-    }*/
+    @PostMapping
+    public HttpEntity<?> addItem(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody CartItemRequest cartItemRequest) {
+        String userId = jwt.getClaim("sub");
+        Response response = service.addItem(userId, cartItemRequest);
+        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
+    }
 
     @GetMapping
-    public HttpEntity<?> getCart(@RequestHeader long userId) {
+    public HttpEntity<?> getCart(@AuthenticationPrincipal Jwt jwt) {
+        String userId = jwt.getClaim("sub");
         Response response = service.getCart(userId);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
-    @PostMapping
-    public HttpEntity<?> addItem(@RequestHeader long userId, @Valid @RequestBody CartItemRequest body) {
-        Response response = service.addItem(userId, body);
-        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
-    }
-
     @DeleteMapping("/{productId}")
-    public HttpEntity<?> removeItem(@RequestHeader long userId, @PathVariable Long productId) {
+    public HttpEntity<?> removeItem(@AuthenticationPrincipal Jwt jwt, @PathVariable Long productId) {
+        String userId = jwt.getClaim("sub");
         Response response = service.removeItem(userId, productId);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }

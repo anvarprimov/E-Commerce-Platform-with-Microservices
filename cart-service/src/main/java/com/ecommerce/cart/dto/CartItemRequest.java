@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CartItemRequest {
     @NotNull
-    private Long productId;
+    private long productId;
 
     @NotNull
     private Integer quantity;

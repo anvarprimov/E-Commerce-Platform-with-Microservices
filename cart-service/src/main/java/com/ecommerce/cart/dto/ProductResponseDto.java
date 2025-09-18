@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +17,7 @@ public class ProductResponseDto {
     private BigDecimal price;
     private Integer quantity;
     private String brand;
+    private boolean active;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 }

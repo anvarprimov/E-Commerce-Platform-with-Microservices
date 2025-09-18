@@ -14,8 +14,8 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false, unique = true)
-    private long userId;
+    @Column(nullable = false)
+    private String userId;
 
     @Column(nullable = false)
     private String productName;

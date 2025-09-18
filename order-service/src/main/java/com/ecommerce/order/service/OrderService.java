@@ -66,7 +66,7 @@ public class OrderService {
 
     public Response getOne(long orderId) {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        return optionalOrder.map(order -> new Response(true, toOrderResponseDto(order))).orElse(new Response(false, "NOT FOUND"));
+        return optionalOrder.map(order -> Response.okData(toOrderResponseDto(order))).orElse(Response.fail("NOT FOUND"));
     }
 
     public PageResponse getByUser(long userId, int page, int size) {

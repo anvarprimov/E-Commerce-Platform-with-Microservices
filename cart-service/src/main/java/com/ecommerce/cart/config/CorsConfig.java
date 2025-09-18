@@ -7,9 +7,9 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class CorsConfig {
-    @Bean
+    /*@Bean
     public CorsFilter corsFilter() {
         CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowedOriginPatterns(List.of("*")); // gateway origin
@@ -19,5 +19,5 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", cfg);
         return new CorsFilter(source);
-    }
+    }*/
 }

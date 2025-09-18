@@ -12,12 +12,12 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+//@Entity
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class Cart {
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
@@ -42,5 +42,5 @@ public class Cart {
 
     @Column(nullable = false)
     @UpdateTimestamp
-    private Timestamp updatedAt;
+    private Timestamp updatedAt;*/
 }

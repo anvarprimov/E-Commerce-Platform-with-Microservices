@@ -7,18 +7,32 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Response {
+public class Response<T> {
     public boolean success;
     public String message;
-    public Object object;
+    public T data;
 
-    public Response(boolean success, String message) {
-        this.success = success;
-        this.message = message;
+    public static <T> Response<T> ok() {
+        Response<T> r = new Response<>();
+        r.success = true;
+        r.message = "OK";
+        r.data = null;
+        return r;
     }
 
-    public Response(boolean success, Object object) {
-        this.success = success;
-        this.object = object;
+    public static <T> Response<T> okData(T data) {
+        Response<T> r = new Response<>();
+        r.success = true;
+        r.message = "OK";
+        r.data = data;
+        return r;
+    }
+
+    public static <T> Response<T> fail(String msg) {
+        Response<T> r = new Response<>();
+        r.success = false;
+        r.message = msg;
+        r.data = null;
+        return r;
     }
 }

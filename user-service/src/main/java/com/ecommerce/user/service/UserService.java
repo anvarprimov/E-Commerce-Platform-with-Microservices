@@ -32,16 +32,16 @@ public class UserService {
     }
     public Response addUserWithRole(UserRequestDto dto, String role) {
         if(repository.existsByEmail(dto.getEmail()))
-            return new Response(false, "EMAIL ALREADY EXISTS");
+            return Response.fail("EMAIL ALREADY EXISTS");
         String token = keycloakAdminService.getAdminAccessToken();
         String keycloakId = keycloakAdminService.createUser(token, dto);
         boolean assignRealmRoleToUser = keycloakAdminService.assignRealmRoleToUser(token, keycloakId, role);
         if (!assignRealmRoleToUser)
-            return new Response(false, "could not assign a role");
+            return Response.fail("KEYCLOAK ERROR: COULD NOT ASSIGN A ROLE");
         User user = mapper.toUser(dto);
         user.setKeycloakId(keycloakId);
         repository.save(user);
-        return new Response(true, "USER SAVED");
+        return Response.ok();
     }
 
     public PageResponse getAllUsers(int page, int size, Boolean active, String sortField) {
@@ -58,16 +58,16 @@ public class UserService {
 
     public Response getOneUser(Long id) {
         Optional<User> optionalUser = repository.findById(id);
-        return optionalUser.map(user -> new Response(true, mapper.toUserResponseDto(user))).orElseGet(() -> new Response(false, "USER NOT FOUND"));
+        return optionalUser.map(user -> Response.okData(mapper.toUserResponseDto(user))).orElseGet(() -> Response.fail("USER NOT FOUND"));
     }
 
     public Response delete(Long id) {
         Optional<User> optionalUser = repository.findById(id);
         if(optionalUser.isEmpty())
-            return new Response(false, "USER NOT FOUND");
+            return Response.fail("USER NOT FOUND");
         User user = optionalUser.get();
         user.setActive(false);
         repository.save(user);
-        return new Response(true, "DELETED");
+        return Response.ok();
     }
 }

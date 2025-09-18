@@ -35,7 +35,7 @@ public class ProductController {
    }
 
    @GetMapping("/{id}")
-   public HttpEntity<?> decreaseStock(@PathVariable long id) {
+   public HttpEntity<?> getOne(@PathVariable long id) {
       Response response = service.getOne(id);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }
