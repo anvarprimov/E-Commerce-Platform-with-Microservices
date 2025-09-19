@@ -23,7 +23,7 @@ public class SecurityConfig {
                         // keep health open; lock everything else
                         .requestMatchers("/actuator/health").permitAll()
                         // If you want Swagger protected, do NOT permit these:
-                        // .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").authenticated()
+                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

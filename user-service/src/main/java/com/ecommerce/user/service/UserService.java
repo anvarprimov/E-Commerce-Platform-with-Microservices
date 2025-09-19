@@ -3,6 +3,7 @@ package com.ecommerce.user.service;
 import com.ecommerce.user.dto.PageResponse;
 import com.ecommerce.user.dto.Response;
 import com.ecommerce.user.dto.UserRequestDto;
+import com.ecommerce.user.dto.UserResponseDto;
 import com.ecommerce.user.entity.User;
 import com.ecommerce.user.mapper.UserMapper;
 import com.ecommerce.user.repo.UserRepository;
@@ -56,12 +57,12 @@ public class UserService {
         );
     }
 
-    public Response getOneUser(Long id) {
+    public Response<UserResponseDto> getOneUser(Long id) {
         Optional<User> optionalUser = repository.findById(id);
         return optionalUser.map(user -> Response.okData(mapper.toUserResponseDto(user))).orElseGet(() -> Response.fail("USER NOT FOUND"));
     }
 
-    public Response delete(Long id) {
+    public Response<Object> delete(Long id) {
         Optional<User> optionalUser = repository.findById(id);
         if(optionalUser.isEmpty())
             return Response.fail("USER NOT FOUND");
