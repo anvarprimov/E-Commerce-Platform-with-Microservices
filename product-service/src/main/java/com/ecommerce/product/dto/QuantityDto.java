@@ -1,5 +1,6 @@
 package com.ecommerce.product.dto;
 
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,10 +10,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StockUnitRequestDto {
+public class QuantityDto {
     @NotNull
     private long productId;
-
+    @NotNull
     @Min(1)
-    private int quantity;
+    private Integer quantity;
 }

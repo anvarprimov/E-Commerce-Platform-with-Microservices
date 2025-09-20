@@ -67,7 +67,7 @@ public class GatewayConfig {
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://PRODUCT-SERVICE"))
 
-                .route("cart-service-", r -> r
+                .route("cart-service", r -> r
                         .path("/api/carts/**")
                         .uri("lb://CART-SERVICE"))
                 .route("cart-service-docs", r -> r
@@ -80,6 +80,9 @@ public class GatewayConfig {
                         .filters(f -> f.requestRateLimiter(config -> config.
                                 setRateLimiter(redisRateLimiter())
                                 .setKeyResolver(userKeyResolver())))
+                        .uri("lb://ORDER-SERVICE"))
+                .route("order-service-admin", r -> r
+                        .path("/admin/orders/**")
                         .uri("lb://ORDER-SERVICE"))
                 .route("order-service-docs", r -> r
                         .path("/order/v3/api-docs")

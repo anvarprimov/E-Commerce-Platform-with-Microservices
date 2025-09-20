@@ -1,4 +1,5 @@
 package com.ecommerce.order.controller;
+
 import com.ecommerce.order.dto.OrderRequestDto;
 import com.ecommerce.order.dto.OrderResponseDto;
 import com.ecommerce.order.dto.PageResponse;
@@ -7,9 +8,10 @@ import com.ecommerce.order.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,28 +28,30 @@ public class OrderController {
     }
 
     @PostMapping
-    public HttpEntity<?> create(@Valid @RequestBody OrderRequestDto dto) {
-        Response response = orderService.create(dto);
+    public HttpEntity<?> create(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody OrderRequestDto dto) {
+        String userId = jwt.getClaim("sub");
+        Response<Object> response = orderService.create(userId, dto);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
-    @GetMapping("/{orderId}")
-    public HttpEntity<?> getOne(@PathVariable long orderId) {
-        Response response = orderService.getOne(orderId);
+    @GetMapping("/{id}")
+    public HttpEntity<?> getOne(@PathVariable long id) {
+        Response<OrderResponseDto> response = orderService.getOne(id);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
     @GetMapping
     public PageResponse getByUser(
-            @RequestParam long userId,
+            @AuthenticationPrincipal Jwt jwt,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        String userId = jwt.getClaim("sub");
         return orderService.getByUser(userId, page, size);
     }
 
-    @PostMapping("/{orderId}/cancel")
-    public HttpEntity<?> cancel(@PathVariable Long orderId, @RequestParam Long userId) {
-        Response response = orderService.cancel(orderId, userId);
+    @PutMapping("/cancel/{id}")
+    public HttpEntity<?> cancel(@PathVariable Long id) {
+        Response<Object> response = orderService.cancel(id);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 }

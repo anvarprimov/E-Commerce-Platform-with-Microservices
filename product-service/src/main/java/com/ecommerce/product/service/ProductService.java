@@ -24,7 +24,7 @@ public class ProductService {
     private final ProductMapper mapper;
     private static final Set<String> SORT_WHITELIST = Set.of("id","name","price","createdAt","updatedAt");
 
-    public Response getALlProducts(ProductSearchRequest req) {
+    public Response<PageResponse> getALlProducts(ProductSearchRequest req) {
         if (req.minPrice() != null && req.maxPrice() != null && req.minPrice().compareTo(req.maxPrice()) > 0)
             return Response.fail("minPrice cannot be greater than maxPrice");
 
@@ -36,19 +36,19 @@ public class ProductService {
         return Response.okData(toPageResponse(productRepository.findAll(spec, pageable)));
     }
 
-    public Response getOne(long id) {
+    public Response<ProductResponseDto> getOne(long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         return optionalProduct.map(product -> Response.okData(mapper.toProductResponseDto(product))).orElseGet(() -> Response.fail("PRODUCT NOT FOUND"));
     }
 
-    public Response create(ProductRequestDto dto) {
+    public Response<Object> create(ProductRequestDto dto) {
         Product product = new Product();
         updateProductHelper(product, dto);
         productRepository.save(product);
         return Response.ok();
     }
 
-    public Response update(long id, ProductRequestDto dto) {
+    public Response<Object> update(long id, ProductRequestDto dto) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty())
             return Response.fail("PRODUCT NOT FOUND");
@@ -58,7 +58,7 @@ public class ProductService {
         return Response.ok();
     }
 
-    public Response softDelete(long id) {
+    public Response<Object> softDelete(long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty())
             return Response.fail("PRODUCT NOT FOUND");
@@ -68,7 +68,7 @@ public class ProductService {
         return Response.ok();
     }
 
-    public Response restore(long id) {
+    public Response<Object> restore(long id) {
         Optional<Product> optionalProduct = productRepository.findById(id);
         if (optionalProduct.isEmpty())
             return Response.fail("PRODUCT NOT FOUND");
@@ -96,9 +96,10 @@ public class ProductService {
         );
     }
 
-    public Response decreaseStock(StockRequestDto requestDto) {
+    public Response<List<OrderItemDto>> decreaseStock(List<QuantityDto> requestDtoList) {
         List<Product> productList = new ArrayList<>();
-        for (StockUnitRequestDto dto : requestDto.getStockUnitRequestDtoList()) {
+        List<OrderItemDto> itemDtoList = new ArrayList<>();
+        for (QuantityDto dto : requestDtoList) {
             Optional<Product> optionalProduct = productRepository.findById(dto.getProductId());
             if (optionalProduct.isEmpty())
                 return Response.fail(dto.getProductId() + " PRODUCT NOT FOUND");
@@ -107,14 +108,20 @@ public class ProductService {
                 return Response.fail(dto.getProductId() + " product not enough available quantity: " + product.getQuantity());
             product.setQuantity(product.getQuantity() - dto.getQuantity());
             productList.add(product);
+            itemDtoList.add(new OrderItemDto(
+                    product.getId(),
+                    product.getName(),
+                    dto.getQuantity(),
+                    product.getPrice()
+            ));
         }
         productRepository.saveAll(productList);
-        return Response.ok();
+        return Response.okData(itemDtoList);
     }
 
-    public Response addToStock(StockRequestDto requestDto) {
+    public Response<Object> addToStock(List<QuantityDto> quantityDtoList) {
         List<Product> productList = new ArrayList<>();
-        for (StockUnitRequestDto dto : requestDto.getStockUnitRequestDtoList()) {
+        for (QuantityDto dto : quantityDtoList) {
             Optional<Product> optionalProduct = productRepository.findById(dto.getProductId());
             if (optionalProduct.isEmpty())
                 return Response.fail(dto.getProductId() + " PRODUCT NOT FOUND");

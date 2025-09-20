@@ -9,8 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderRequestDto {
-    @NotNull
-    private long userId;
     @NotEmpty
-    private List<OrderItemRequestDto> itemRequestDtoList;
+    private List<QuantityDto> items;
+    private String notes;
 }

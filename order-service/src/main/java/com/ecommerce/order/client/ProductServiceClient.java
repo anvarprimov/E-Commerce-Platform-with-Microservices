@@ -1,13 +1,19 @@
 package com.ecommerce.order.client;
 
+import com.ecommerce.order.config.FeignSecurityConfig;
+import com.ecommerce.order.dto.OrderItemDto;
+import com.ecommerce.order.dto.QuantityDto;
 import com.ecommerce.order.dto.Response;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "product-service")
+import java.util.List;
+
+@FeignClient(name = "product-service", configuration = FeignSecurityConfig.class)
 public interface ProductServiceClient {
-    @GetMapping("/api/products/{id}")
-    ResponseEntity<Response> getOne(@PathVariable Long id);
+    @PostMapping("/api/products/stock")
+    Response<List<OrderItemDto>> decreaseStock(@RequestBody List<QuantityDto> requestDtoList);
+    @PostMapping("/api/products/refund")
+    Response<Object> refund(@RequestBody List<QuantityDto> requestDtoList);
 }

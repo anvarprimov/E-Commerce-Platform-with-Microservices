@@ -1,5 +1,8 @@
 package com.ecommerce.order.entity;
 
+import com.ecommerce.order.enums.OrderStatus;
+import com.ecommerce.order.enums.PaymentMethod;
+import com.ecommerce.order.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,32 +18,32 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false)
-    private long userId;
+    private String userId;
 
-    /*@Enumerated(EnumType.STRING) @Column(nullable = false)
+    @Enumerated(EnumType.STRING) @Column(nullable = false)
     private OrderStatus status;
 
     @Enumerated(EnumType.STRING) @Column(nullable = false)
     private PaymentStatus paymentStatus;
 
     @Enumerated(EnumType.STRING) @Column(nullable = false)
-    private PaymentMethod paymentMethod;*/
+    private PaymentMethod paymentMethod;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    /*@Column(nullable = false, scale = 2, precision = 19)
+    @Column(nullable = false, scale = 2, precision = 19)
     private BigDecimal subtotal;
 
     @Column(nullable = false, scale = 2, precision = 19)
     private BigDecimal shippingFee;
 
     @Column(nullable = false, scale = 2, precision = 19)
-    private BigDecimal tax;*/
+    private BigDecimal tax;
 
     @Column(nullable = false, scale = 2, precision = 19)
     private BigDecimal total;

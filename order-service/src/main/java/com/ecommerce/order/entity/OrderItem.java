@@ -29,7 +29,7 @@ public class OrderItem {
     private BigDecimal lineTotal;
 
     @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "order_id")
-//    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @JoinColumn(name = "order_id", nullable = false)
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Order order;
 }

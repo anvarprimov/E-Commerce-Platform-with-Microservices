@@ -1,4 +1,4 @@
-package com.ecommerce.cart.config;
+package com.ecommerce.order.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,7 @@ public class SecurityConfig {
     }
 
     private JwtAuthenticationConverter keycloakJwtAuthConverter() {
-        var converter = new JwtAuthenticationConverter();
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(new KeycloakRealmClientRoleConverter());
         return converter;
     }
