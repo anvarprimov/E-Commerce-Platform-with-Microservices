@@ -35,12 +35,14 @@ public class SecurityConfig {
                                 "/cart/v3/api-docs/**",
                                 "/order/v3/api-docs/**",
                                 "/notification/v3/api-docs/**",
-                                "/api/users/register"
+                                "/api/users/register",
+                                // OAuth2 login endpoints
+                                "/login/**", "/oauth2/**"
                         ).permitAll()
                         .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                         .pathMatchers("/admin/**").hasRole( "ADMIN")
-                        .pathMatchers("/api/**", "/admin/**").denyAll()
                         .anyExchange().authenticated())
+                .oauth2Login(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtract())))
                 .build();
     }
