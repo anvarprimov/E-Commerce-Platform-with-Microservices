@@ -8,17 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenApiConfig {
-    /*@Bean
-    public OpenAPI openAPI() {
-        return new OpenAPI()
-                .components(new Components()
-                        .addSecuritySchemes("bearerAuth",
-                                new SecurityScheme()
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("bearer")
-                                        .bearerFormat("JWT")))
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"));
-    }*/
     @Bean
     public OpenAPI openAPI() {
         final String OAUTH_SCHEME = "oauth2";
@@ -29,7 +18,7 @@ public class OpenApiConfig {
                                         .type(SecurityScheme.Type.OAUTH2)
                                         .flows(new OAuthFlows()
                                                 .authorizationCode(new OAuthFlow()
-                                                        .authorizationUrl("http://localhost:8443/realms/ecommerce/protocol/openid-connect/auth")
+                                                        .authorizationUrl("http://localhost:8443/realms/ecommerce/protocol/openid-connect/auth?prompt=login")
                                                         .tokenUrl("http://localhost:8443/realms/ecommerce/protocol/openid-connect/token")
                                                         .scopes(new Scopes()
                                                                 .addString("openid","OpenID scope")

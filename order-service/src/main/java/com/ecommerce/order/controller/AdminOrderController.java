@@ -8,6 +8,8 @@ import com.ecommerce.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,8 +36,8 @@ public class AdminOrderController {
     }
 
     @PutMapping("/status/{id}")
-    public Response<Object> updateStatus(@PathVariable long id, @RequestParam OrderStatus status) {
-
-        return orderService.updateStatus(id, status);
+    public HttpEntity<?> updateStatus(@PathVariable long id, @RequestParam OrderStatus status) {
+        Response<java.lang.Object> response = orderService.updateStatus(id, status);
+        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 }

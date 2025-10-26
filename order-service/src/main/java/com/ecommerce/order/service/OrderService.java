@@ -1,7 +1,6 @@
 package com.ecommerce.order.service;
 
 import com.ecommerce.order.client.ProductServiceClient;
-import com.ecommerce.order.client.UserServiceClient;
 import com.ecommerce.order.dto.*;
 import com.ecommerce.order.entity.Order;
 import com.ecommerce.order.entity.OrderItem;
@@ -21,10 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +28,6 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final OrderRepository orderRepository;
     private final RabbitTemplate rabbitTemplate;
-    private final UserServiceClient userServiceClient;
     private final ProductServiceClient productServiceClient;
 
     @Value("${rabbitmq.exchange.name}")
@@ -43,14 +38,12 @@ public class OrderService {
 
 
     @CircuitBreaker(name = "productService")
-    public String hello(){
+    public void sendMessage(NotificationEvent event){
         rabbitTemplate.convertAndSend(
                 exchangeName,
                 routingKey,
-                Map.of("orderId", "1", "status", "created"));
-        return userServiceClient.hello();
+                event);
     }
-
 
     public Response<Object> create(String userId, OrderRequestDto dto) {
         Response<List<OrderItemDto>> response;
@@ -85,6 +78,17 @@ public class OrderService {
         order.setShippingFee(shippingFee);
         order.setTotal(total);
         orderRepository.save(order);
+
+        NotificationEvent event = new NotificationEvent(
+                userId,
+                "Your order has been created",
+                "Order id = " + order.getId() +
+                        ", order total price = " + order.getTotal() +
+                        ", order creation date = " + order.getCreatedAt() +
+                        ", estimated delivery date is within three business days",
+                "EMAIL"
+        );
+        sendMessage(event);
         return Response.ok();
     }
 
@@ -98,7 +102,8 @@ public class OrderService {
         return toPageResponse(orderRepository.findAllByUserIdAndStatusIsNot(userId, OrderStatus.CANCELED, pageable));
     }
 
-    public Response<Object> cancel(long id) {Optional<Order> optionalOrder = orderRepository.findById(id);
+    public Response<Object> cancel(long id) {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
         if (optionalOrder.isEmpty())
             return Response.fail("ORDER NOT FOUND");
         Order order = optionalOrder.get();
@@ -117,9 +122,20 @@ public class OrderService {
         } catch (Exception e) {
             return Response.fail("PRODUCT SERVER FAILED");
         }
-
-
         orderRepository.save(order);
+
+        NotificationEvent event = new NotificationEvent(
+                order.getUserId(),
+                "Your order has been CANCELLED",
+                "Order id = " + order.getId() +
+                        ", order cancellation date = " + order.getUpdatedAt() +
+                        ", order total price = " + order.getTotal() +
+                        ", order creation date = " + order.getCreatedAt() +
+                        ", you will receive refund within three business days",
+                "EMAIL"
+        );
+        sendMessage(event);
+
         return Response.ok();
     }
 
@@ -161,6 +177,17 @@ public class OrderService {
         Order order = optionalOrder.get();
         order.setStatus(status);
         orderRepository.save(order);
+
+        NotificationEvent event = new NotificationEvent(
+                order.getUserId(),
+                "Order status has been changed",
+                "Order id = " + order.getId() +
+                        ", order total price = " + order.getTotal() +
+                        ", order creation date = " + order.getCreatedAt() +
+                        ", order has been " + order.getStatus().toString(),
+                "EMAIL"
+        );
+        sendMessage(event);
         return Response.ok();
     }
 }

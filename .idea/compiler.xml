@@ -11,18 +11,26 @@
         <module name="discovery" />
         <module name="configserver" />
       </profile>
-      <profile name="Annotation profile for cart-service" enabled="true">
+      <profile name="Annotation profile for notification-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
+        <processorPath>
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
         <module name="product-service" />
         <module name="cart-service" />
-        <module name="order-service" />
         <module name="user-service" />
         <module name="notification-service" />
+      </profile>
+      <profile name="Annotation profile for order-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath>
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
+        </processorPath>
+        <module name="order-service" />
       </profile>
     </annotationProcessing>
   </component>

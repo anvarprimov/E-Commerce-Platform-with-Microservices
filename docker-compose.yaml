@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 #  RABBITMQ
   rabbitmq:
-    container_name: rabbitmq_container
+    container_name: rabbitmq
     image: rabbitmq:4-management
     environment:
       RABBITMQ_DEFAULT_USER: guest
@@ -22,6 +22,15 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - ecommerce
+    restart: unless-stopped
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # UI http://localhost:8025
     networks:
       - ecommerce
     restart: unless-stopped
