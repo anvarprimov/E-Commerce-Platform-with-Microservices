@@ -29,6 +29,7 @@ public class NotificationController {
     private final NotificationService service;
 
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<?> send(@RequestBody @Valid SendRequest req){
         Response<Object> response = service.send(req);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
