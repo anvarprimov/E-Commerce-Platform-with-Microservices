@@ -2,7 +2,9 @@ package com.ecommerce.user.controller;
 
 import com.ecommerce.user.dto.Response;
 import com.ecommerce.user.dto.UserRequestDto;
+import com.ecommerce.user.dto.UserResponseDto;
 import com.ecommerce.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -27,8 +29,8 @@ public class UserAdminController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public HttpEntity<?> add(@RequestBody UserRequestDto dto) {
-        Response response = service.add(dto);
+    public HttpEntity<?> add(@RequestBody @Valid UserRequestDto dto) {
+        Response<Object> response = service.add(dto);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
@@ -44,14 +46,14 @@ public class UserAdminController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<?> getOneUser(@PathVariable Long id) {
-        Response response = service.getOneUser(id);
+        Response<UserResponseDto> response = service.getOneUser(id);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<?> delete(@PathVariable Long id) {
-        Response response = service.delete(id);
+        Response<Object> response = service.deactivate(id);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 }

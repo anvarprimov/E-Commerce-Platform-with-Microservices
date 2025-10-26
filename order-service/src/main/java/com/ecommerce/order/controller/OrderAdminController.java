@@ -1,13 +1,11 @@
 package com.ecommerce.order.controller;
 
-import com.ecommerce.order.dto.OrderResponseDto;
 import com.ecommerce.order.dto.PageResponse;
 import com.ecommerce.order.dto.Response;
 import com.ecommerce.order.enums.OrderStatus;
 import com.ecommerce.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin/orders")
 @RequiredArgsConstructor
-public class AdminOrderController {
+public class OrderAdminController {
 
     private final OrderService orderService;
     @Value("${server.port}")
