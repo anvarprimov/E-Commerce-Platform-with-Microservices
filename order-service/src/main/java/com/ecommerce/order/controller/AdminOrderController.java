@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,11 +23,13 @@ public class AdminOrderController {
     private String port;
 
     @GetMapping("/test")
+    @PreAuthorize("hasRole('ADMIN')")
     public String test() {
         return "order admin port: " + port;
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public PageResponse list(
             @RequestParam(required = false) OrderStatus status,
             @RequestParam(required = false) String userId,
@@ -36,6 +39,7 @@ public class AdminOrderController {
     }
 
     @PutMapping("/status/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<?> updateStatus(@PathVariable long id, @RequestParam OrderStatus status) {
         Response<java.lang.Object> response = orderService.updateStatus(id, status);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);

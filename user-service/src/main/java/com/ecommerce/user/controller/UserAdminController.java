@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,17 +20,20 @@ public class UserAdminController {
     @Value("${server.port}")
     private String port;
     @GetMapping("/test")
+    @PreAuthorize("hasRole('ADMIN')")
     public String hello() {
         return "user admin port: " + port;
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<?> add(@RequestBody UserRequestDto dto) {
         Response response = service.add(dto);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<?> getAllUsers(@RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "20") int size,
                                    @RequestParam(defaultValue = "true") Boolean active,
@@ -38,12 +42,14 @@ public class UserAdminController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<?> getOneUser(@PathVariable Long id) {
         Response response = service.getOneUser(id);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public HttpEntity<?> delete(@PathVariable Long id) {
         Response response = service.delete(id);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);

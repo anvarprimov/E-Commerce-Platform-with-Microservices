@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class UserController {
     @Value("${server.port}")
     private String port;
     @GetMapping("/test")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public String hello() {
         return "user port: " + port;
     }

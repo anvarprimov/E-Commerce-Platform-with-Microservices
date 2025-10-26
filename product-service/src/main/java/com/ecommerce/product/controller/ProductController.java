@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +22,20 @@ public class ProductController {
    private String port;
 
    @GetMapping("/test")
+   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
    public String test() {
       return "product port: " + port;
    }
 
    @GetMapping
+   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
    public HttpEntity<?> getALlProducts(@ModelAttribute ProductSearchRequest request) {
       Response<PageResponse> response = service.getALlProducts(request);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }
 
    @GetMapping("/{id}")
+   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
    public HttpEntity<?> getOne(@PathVariable long id) {
       Response<ProductResponseDto> response = service.getOne(id);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
@@ -39,12 +43,14 @@ public class ProductController {
 
    // inter-service
    @PostMapping("/stock")
+   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
    public HttpEntity<?> decreaseStock(@RequestBody List<QuantityDto> requestDtoList) {
       Response<List<OrderItemDto>> response = service.decreaseStock(requestDtoList);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }
 
    @PostMapping("/refund")
+   @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
    public HttpEntity<?> refund(@RequestBody List<QuantityDto> quantityDtoList) {
       Response<Object> response = service.addToStock(quantityDtoList);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);

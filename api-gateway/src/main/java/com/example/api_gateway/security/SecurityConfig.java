@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -23,6 +24,7 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
+                .securityContextRepository(NoOpServerSecurityContextRepository.getInstance()) //
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeExchange(exchange -> exchange
@@ -36,18 +38,33 @@ public class SecurityConfig {
                                 "/order/v3/api-docs/**",
                                 "/notification/v3/api-docs/**",
                                 "/api/users/register",
-                                // OAuth2 login endpoints
                                 "/login/**", "/oauth2/**"
                         ).permitAll()
-                        .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                         .pathMatchers("/admin/**").hasRole( "ADMIN")
+                        .pathMatchers("/api/**").hasAnyRole("USER", "ADMIN")
                         .anyExchange().authenticated())
-                .oauth2Login(Customizer.withDefaults())
+//                .oauth2Login(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(grantedAuthoritiesExtract())))
                 .build();
     }
 
     private Converter<Jwt, Mono<AbstractAuthenticationToken>> grantedAuthoritiesExtract() {
+        ReactiveJwtAuthenticationConverter jwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            List<String> roles = jwt.getClaimAsMap("resource_access")
+                    .entrySet().stream()
+                    .filter(entry -> entry.getKey().equals("gateway"))
+                    .flatMap(entry -> ((Map<String, List<String>>) entry.getValue())
+                            .get("roles").stream())
+                    .toList();
+
+            return Flux.fromIterable(roles)
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
+        });
+        return jwtAuthenticationConverter;
+    }
+
+    /*private Converter<Jwt, Mono<AbstractAuthenticationToken>> grantedAuthoritiesExtract() {
         ReactiveJwtAuthenticationConverter jwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
             List<String> roles = jwt.getClaimAsMap("resource_access")
@@ -61,5 +78,5 @@ public class SecurityConfig {
                     .map(role -> new SimpleGrantedAuthority("ROLE_" + role));
         });
         return jwtAuthenticationConverter;
-    }
+    }*/
 }

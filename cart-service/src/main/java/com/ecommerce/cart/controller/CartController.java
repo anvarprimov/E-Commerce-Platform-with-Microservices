@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +23,13 @@ public class CartController {
     private String port;
 
     @GetMapping("/test")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public String test() {
         return "cart port: " + port;
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public HttpEntity<?> addItem(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody CartItemRequest cartItemRequest) {
         String userId = jwt.getClaim("sub");
         Response response = service.addItem(userId, cartItemRequest);
@@ -34,6 +37,7 @@ public class CartController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public HttpEntity<?> getCart(@AuthenticationPrincipal Jwt jwt) {
         String userId = jwt.getClaim("sub");
         Response response = service.getCart(userId);
@@ -41,6 +45,7 @@ public class CartController {
     }
 
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public HttpEntity<?> removeItem(@AuthenticationPrincipal Jwt jwt, @PathVariable Long productId) {
         String userId = jwt.getClaim("sub");
         Response response = service.removeItem(userId, productId);

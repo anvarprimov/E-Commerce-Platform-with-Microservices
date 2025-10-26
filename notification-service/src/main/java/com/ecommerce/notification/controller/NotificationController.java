@@ -22,6 +22,7 @@ public class NotificationController {
     private String port;
 
     @GetMapping("/test")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public String test() {
         return "notification port: " + port;
     }
@@ -36,6 +37,7 @@ public class NotificationController {
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public PageResponse myNotifications(@AuthenticationPrincipal Jwt jwt,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "20") int size){
@@ -44,6 +46,7 @@ public class NotificationController {
     }
 
     @PostMapping("/read/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public void markRead(@PathVariable long id, @AuthenticationPrincipal Jwt jwt){
         String userId = jwt.getClaim("sub");
         service.markRead(id, userId);
