@@ -175,6 +175,8 @@ public class OrderService {
         if (optionalOrder.isEmpty())
             return Response.fail("ORDER NOT FOUND");
         Order order = optionalOrder.get();
+        if(order.getStatus().equals(OrderStatus.DELIVERED) || order.getStatus().equals(OrderStatus.CANCELED))
+            return Response.fail("Sorry order is " + order.getStatus() + ", it is too late");
         order.setStatus(status);
         orderRepository.save(order);
 
