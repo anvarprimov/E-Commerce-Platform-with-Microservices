@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -45,4 +44,12 @@ public class User {
     @Column(nullable = false)
     @UpdateTimestamp
     private Timestamp updatedAt;
+
+    public User(String email, String keycloakId, String firstName, String lastName, String phone) {
+        this.email = email;
+        this.keycloakId = keycloakId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+    }
 }

@@ -17,30 +17,24 @@ public class DataLoader implements CommandLineRunner {
     @Value("${spring.sql.init.mode}")
     private String initMode;
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (initMode.equals("always")) {
-            UserRequestDto userDto = new UserRequestDto(
+            String userKeycloakId = "a47520fc-6740-4bee-90ad-28457abc78ea";
+            String adminKeycloakId = "374d7815-4cf9-44cc-ab23-4aed52c19d39";
+            User user = new User(
                     "user@gmail.com",
-                    "user",
-                    "user",
+                    userKeycloakId,
                     "Userfirst",
                     "Userlast",
                     "11111111"
             );
-            UserRequestDto adminDto = new UserRequestDto(
+            User admin = new User(
                     "admin@gmail.com",
-                    "admin",
-                    "admin",
+                    adminKeycloakId,
                     "Adminfirst",
                     "Adminlast",
                     "11111111"
             );
-            String userKeycloakId = "374d7815-4cf9-44cc-ab23-4aed52c19d39";
-            String adminKeycloakId = "a47520fc-6740-4bee-90ad-28457abc78ea";
-            User user = userMapper.toUser(userDto);
-            User admin = userMapper.toUser(adminDto);
-            user.setKeycloakId(userKeycloakId);
-            admin.setKeycloakId(adminKeycloakId);
             userRepository.save(user);
             userRepository.save(admin);
         }
