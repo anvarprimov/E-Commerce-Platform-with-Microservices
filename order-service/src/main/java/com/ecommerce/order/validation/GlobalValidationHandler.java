@@ -1,4 +1,4 @@
-package com.ecommerce.user.validation;
+package com.ecommerce.order.validation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -23,7 +23,7 @@ public class CartService {
     private final CartItemRepository repository;
     private final CartItemMapper mapper;
 
-    public Response<ProductResponseDto> addItem(String userId, CartItemRequest body) {
+    public Response<Object> addItem(String userId, CartItemRequest body) {
         Response<ProductResponseDto> response;
 
         try {

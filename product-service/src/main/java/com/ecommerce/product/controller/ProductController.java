@@ -2,6 +2,7 @@ package com.ecommerce.product.controller;
 
 import com.ecommerce.product.dto.*;
 import com.ecommerce.product.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -44,14 +45,14 @@ public class ProductController {
    // inter-service
    @PostMapping("/stock")
    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-   public HttpEntity<?> decreaseStock(@RequestBody List<QuantityDto> requestDtoList) {
+   public HttpEntity<?> decreaseStock(@RequestBody @Valid List<QuantityDto> requestDtoList) {
       Response<List<OrderItemDto>> response = service.decreaseStock(requestDtoList);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }
 
    @PostMapping("/refund")
    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-   public HttpEntity<?> refund(@RequestBody List<QuantityDto> quantityDtoList) {
+   public HttpEntity<?> refund(@RequestBody @Valid List<QuantityDto> quantityDtoList) {
       Response<Object> response = service.addToStock(quantityDtoList);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }

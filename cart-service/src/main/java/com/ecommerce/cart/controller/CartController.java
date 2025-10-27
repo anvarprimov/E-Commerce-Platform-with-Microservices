@@ -1,6 +1,7 @@
 package com.ecommerce.cart.controller;
 
 import com.ecommerce.cart.dto.CartItemRequest;
+import com.ecommerce.cart.dto.CartResponse;
 import com.ecommerce.cart.dto.Response;
 import com.ecommerce.cart.service.CartService;
 import jakarta.validation.Valid;
@@ -32,7 +33,7 @@ public class CartController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public HttpEntity<?> addItem(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody CartItemRequest cartItemRequest) {
         String userId = jwt.getClaim("sub");
-        Response response = service.addItem(userId, cartItemRequest);
+        Response<Object> response = service.addItem(userId, cartItemRequest);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
@@ -40,7 +41,7 @@ public class CartController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public HttpEntity<?> getCart(@AuthenticationPrincipal Jwt jwt) {
         String userId = jwt.getClaim("sub");
-        Response response = service.getCart(userId);
+        Response<CartResponse> response = service.getCart(userId);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
@@ -48,7 +49,7 @@ public class CartController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public HttpEntity<?> removeItem(@AuthenticationPrincipal Jwt jwt, @PathVariable Long productId) {
         String userId = jwt.getClaim("sub");
-        Response response = service.removeItem(userId, productId);
+        Response<Object> response = service.removeItem(userId, productId);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 }

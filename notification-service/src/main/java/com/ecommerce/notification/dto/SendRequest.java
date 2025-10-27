@@ -16,5 +16,6 @@ public class SendRequest {
     private String title;
     @NotBlank
     private String body;
+
     private Channel channel;
 }

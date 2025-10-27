@@ -30,14 +30,14 @@ public class ProductAdminController {
 
    @PostMapping
    @PreAuthorize("hasRole('ADMIN')")
-   public HttpEntity<?> create(@Valid @RequestBody ProductRequestDto dto) {
+   public HttpEntity<?> create(@RequestBody @Valid ProductRequestDto dto) {
       Response<Object> response = service.create(dto);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }
 
    @PutMapping("/{id}")
    @PreAuthorize("hasRole('ADMIN')")
-   public HttpEntity<?> update(@PathVariable Long id, @Valid @RequestBody ProductRequestDto dto) {
+   public HttpEntity<?> update(@PathVariable Long id, @RequestBody @Valid ProductRequestDto dto) {
       Response<Object> response = service.update(id, dto);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }
@@ -57,26 +57,8 @@ public class ProductAdminController {
 
    @PostMapping("/stock")
    @PreAuthorize("hasRole('ADMIN')")
-   public HttpEntity<?> addToStock(@RequestBody List<QuantityDto> quantityDtoList) {
+   public HttpEntity<?> addToStock(@RequestBody @Valid List<QuantityDto> quantityDtoList) {
       Response<Object> response = service.addToStock(quantityDtoList);
       return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
    }
-
-   /*@PostMapping(path="/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-   public List<ImageDto> uploadImages(@PathVariable String id, @RequestParam("files") List<MultipartFile> files) {
-      return service.addImages(id, files);
-   }
-
-   @DeleteMapping("/{id}/images/{imageId}")
-   public void deleteImage(@PathVariable String id, @PathVariable String imageId) {
-      service.removeImage(id, imageId);
-   }
-
-   @PostMapping(path="/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-   public ImportResult importCsv(@RequestParam("file") MultipartFile file) {
-      return service.importCsv(file);
-   }
-
-   @GetMapping("/export")
-   public ResponseEntity<Resource> exportCsv() { return service.exportCsv(); }*/
 }
