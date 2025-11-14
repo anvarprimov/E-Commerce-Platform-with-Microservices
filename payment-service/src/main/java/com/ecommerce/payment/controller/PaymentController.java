@@ -32,9 +32,8 @@ public class PaymentController {
 
     @PostMapping
     @PreAuthorize(value = "hasAnyRole('ADMIN', 'USER')")
-    public HttpEntity<?> createPayment(@Valid @RequestBody PaymentRequestDto dto) {
-        Response<PaymentResponseDto> response = paymentService.createPayment(dto);
-        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
+    public PaymentResponseDto createPayment(@Valid @RequestBody PaymentRequestDto dto) {
+        return paymentService.createPayment(dto);
     }
 
     @GetMapping("/{paymentId}")

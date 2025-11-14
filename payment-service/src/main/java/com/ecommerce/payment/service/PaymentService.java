@@ -7,7 +7,6 @@ import com.ecommerce.payment.dto.PaymentStatusDto;
 import com.ecommerce.payment.dto.Response;
 import com.ecommerce.payment.entity.Payment;
 import com.ecommerce.payment.enums.PaymentStatus;
-import com.ecommerce.payment.event.PaymentCreatedEvent;
 import com.ecommerce.payment.event.PaymentStatusChangedEvent;
 import com.ecommerce.payment.mapper.PaymentMapper;
 import com.ecommerce.payment.repo.PaymentRepository;
@@ -27,7 +26,7 @@ public class PaymentService {
     private final PaymentMapper paymentMapper;
     private final RabbitTemplate rabbitTemplate;
 
-    public Response<PaymentResponseDto> createPayment(PaymentRequestDto dto) {
+    public PaymentResponseDto createPayment(PaymentRequestDto dto) {
 
         Payment payment = paymentRepository.save(new Payment(
                 dto.getOrderId(),
@@ -36,18 +35,6 @@ public class PaymentService {
                 PaymentStatus.SUCCESS,
                 dto.getMethod()
         ));
-
-        PaymentCreatedEvent createdEvent = new PaymentCreatedEvent(
-                payment.getId(),
-                payment.getOrderId(),
-                payment.getUserId(),
-                payment.getAmount());
-
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfig.PAYMENT_EXCHANGE,
-                "payment.created",
-                createdEvent
-        );
 
         PaymentStatusChangedEvent statusEvent = new PaymentStatusChangedEvent(
                 payment.getId(),
@@ -62,7 +49,7 @@ public class PaymentService {
                 statusEvent
         );
 
-        return Response.okData(paymentMapper.toPaymentResponseDto(payment));
+        return paymentMapper.toPaymentResponseDto(payment);
     }
 
     @Transactional(readOnly = true)
