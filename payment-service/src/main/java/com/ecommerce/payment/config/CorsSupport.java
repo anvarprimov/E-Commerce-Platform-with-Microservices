@@ -1,4 +1,4 @@
-package com.ecommerce.cart.config;
+package com.ecommerce.payment.config;
 
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;

@@ -8,7 +8,7 @@ import java.util.List;
 public final class CorsSupport {
     private CorsSupport() {}
     public static UrlBasedCorsConfigurationSource permissive() {
-        var cfg = new CorsConfiguration();
+        CorsConfiguration cfg = new CorsConfiguration();
         cfg.setAllowedOriginPatterns(List.of("*"));
         cfg.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));
