@@ -1,47 +1,47 @@
 package com.ecommerce.order.config;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-    @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
+    public static final String PAYMENT_EXCHANGE = "payment.exchange";
+    public static final String PAYMENT_QUEUE = "payment.status.queue";
+    public static final String PAYMENT_ROUTING_KEY = "payment.status.#";
 
-    @Value("${rabbitmq.queue.name}")
-    private String queueName;
 
-    @Value("${rabbitmq.routing.key}")
-    private String routingKey;
+    public static final String NOTIFICATION_EXCHANGE = "notification.exchange";
+    public static final String NOTIFICATION_ROUTING_KEY = "notification.order.created";
 
     @Bean
-    public Queue queue() {
-        return QueueBuilder.durable(queueName).build();
+    public TopicExchange paymentExchange() {
+        return new TopicExchange(PAYMENT_EXCHANGE);
     }
+
     @Bean
-    public TopicExchange exchange() {
-        return ExchangeBuilder.topicExchange(exchangeName).durable(true).build();
+    public Queue paymentStatusQueue() {
+        return new Queue(PAYMENT_QUEUE, true);
     }
+
     @Bean
-    public Binding binding() {
+    public Binding paymentStatusBinding() {
         return BindingBuilder
-                .bind(queue())
-                .to(exchange())
-                .with(routingKey);
+                .bind(paymentStatusQueue())
+                .to(paymentExchange())
+                .with(PAYMENT_ROUTING_KEY);
     }
 
     @Bean
-    public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
-        RabbitAdmin admin = new RabbitAdmin(connectionFactory);
-        admin.setAutoStartup(true);
-        return admin;
+    public TopicExchange notificationExchange() {
+        return new TopicExchange(NOTIFICATION_EXCHANGE);
     }
 
     @Bean
@@ -50,10 +50,10 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
+                                         MessageConverter messageConverter) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setMessageConverter(messageConverter());
-        template.setExchange(exchangeName);
+        template.setMessageConverter(messageConverter);
         return template;
     }
 }

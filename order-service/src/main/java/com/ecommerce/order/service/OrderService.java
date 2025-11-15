@@ -1,18 +1,21 @@
 package com.ecommerce.order.service;
 
+import com.ecommerce.order.client.PaymentServiceClient;
 import com.ecommerce.order.client.ProductServiceClient;
+import com.ecommerce.order.config.RabbitMQConfig;
 import com.ecommerce.order.dto.*;
 import com.ecommerce.order.entity.Order;
 import com.ecommerce.order.entity.OrderItem;
 import com.ecommerce.order.enums.OrderStatus;
 import com.ecommerce.order.enums.PaymentMethod;
 import com.ecommerce.order.enums.PaymentStatus;
+import com.ecommerce.order.event.NotificationEvent;
+import com.ecommerce.order.event.PaymentStatusEvent;
 import com.ecommerce.order.mapper.OrderMapper;
 import com.ecommerce.order.repo.OrderRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +23,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,19 +34,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final RabbitTemplate rabbitTemplate;
     private final ProductServiceClient productServiceClient;
-
-    @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
-
-    @Value("${rabbitmq.routing.key}")
-    private String routingKey;
-
+    private final PaymentServiceClient paymentServiceClient;
 
     @CircuitBreaker(name = "productService")
     public void sendMessage(NotificationEvent event){
         rabbitTemplate.convertAndSend(
-                exchangeName,
-                routingKey,
+                RabbitMQConfig.NOTIFICATION_EXCHANGE,
+                RabbitMQConfig.NOTIFICATION_ROUTING_KEY,
                 event);
     }
 
@@ -57,7 +56,7 @@ public class OrderService {
         order.setUserId(userId);
         order.setNotes(dto.getNotes());
         order.setPaymentMethod(PaymentMethod.CARD);
-        order.setPaymentStatus(PaymentStatus.PAID);
+        order.setPaymentStatus(PaymentStatus.UNPAID);
         order.setStatus(OrderStatus.PENDING);
 
         BigDecimal subTotal = BigDecimal.ZERO;
@@ -79,6 +78,16 @@ public class OrderService {
         order.setTotal(total);
         orderRepository.save(order);
 
+        PaymentResponseDto paymentResponseDto = paymentServiceClient.createPayment(new PaymentRequestDto(
+                order.getId(),
+                userId,
+                total,
+                order.getPaymentMethod()
+        ));
+
+        order.setPaymentId(paymentResponseDto.getPaymentId());
+        orderRepository.save(order);
+
         NotificationEvent event = new NotificationEvent(
                 userId,
                 "Your order has been created",
@@ -89,6 +98,7 @@ public class OrderService {
                 "EMAIL"
         );
         sendMessage(event);
+
         return Response.ok();
     }
 
@@ -179,7 +189,11 @@ public class OrderService {
             return Response.fail("Sorry order is " + order.getStatus() + ", it is too late");
         order.setStatus(status);
         orderRepository.save(order);
+        sentStatusUpdateNotification(order);
+        return Response.ok();
+    }
 
+    private void sentStatusUpdateNotification(Order order) {
         NotificationEvent event = new NotificationEvent(
                 order.getUserId(),
                 "Order status has been changed",
@@ -190,6 +204,18 @@ public class OrderService {
                 "EMAIL"
         );
         sendMessage(event);
-        return Response.ok();
+    }
+
+    public void handlePaymentStatus(PaymentStatusEvent event) {
+        Optional<Order> optionalOrder = orderRepository.findById(event.getOrderId());
+        if (optionalOrder.isEmpty())
+                return;
+        Order order = optionalOrder.get();
+        order.setPaymentStatus(event.getStatus());
+        if (event.getStatus().equals(PaymentStatus.PAID)){
+            order.setStatus(OrderStatus.CONFIRMED);
+        }
+        orderRepository.save(order);
+        sentStatusUpdateNotification(order);
     }
 }

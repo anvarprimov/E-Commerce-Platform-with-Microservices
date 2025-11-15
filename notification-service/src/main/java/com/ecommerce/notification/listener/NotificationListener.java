@@ -1,5 +1,6 @@
-package com.ecommerce.notification.amqp;
+package com.ecommerce.notification.listener;
 
+import com.ecommerce.notification.config.RabbitMQConfig;
 import com.ecommerce.notification.dto.NotificationEvent;
 import com.ecommerce.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +12,8 @@ import org.springframework.stereotype.Component;
 public class NotificationListener {
     private final NotificationService notificationService;
 
-    @RabbitListener(queues = "${rabbitmq.queue.name}")
+    @RabbitListener(queues = RabbitMQConfig.NOTIFICATION_QUEUE)
     public void onMessage(NotificationEvent evt) {
-        // idempotent store + send async
         notificationService.handleEvent(evt);
     }
 }

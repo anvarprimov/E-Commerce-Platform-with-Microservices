@@ -11,10 +11,10 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentResponseDto {
-    private Long id;
-    private String paymentId;
-    private Long orderId;
-    private Long userId;
+    private long id;
+    private long paymentId;
+    private long orderId;
+    private String userId;
     private BigDecimal amount;
     private String status;
     private String method;

@@ -21,6 +21,8 @@ public class Order {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private long paymentId;
+
     @Column(nullable = false)
     private String userId;
 

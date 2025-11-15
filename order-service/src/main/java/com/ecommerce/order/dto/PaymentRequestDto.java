@@ -14,10 +14,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class PaymentRequestDto {
     @NotNull
-    private Long orderId;
+    private long orderId;
 
     @NotNull
-    private Long userId;
+    private String userId;
 
     @NotNull
     @Min(1)

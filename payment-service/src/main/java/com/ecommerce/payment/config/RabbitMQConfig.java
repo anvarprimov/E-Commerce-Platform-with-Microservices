@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
     public static final String PAYMENT_EXCHANGE = "payment.exchange";
-    public static final String PAYMENT_STATUS_QUEUE = "payment.status.queue";
-    public static final String PAYMENT_STATUS_ROUTING_KEY = "payment.status.#";
+    public static final String PAYMENT_QUEUE = "payment.status.queue";
+    public static final String PAYMENT_ROUTING_KEY = "payment.status.changed";
 
     @Bean
     public TopicExchange paymentExchange() {
@@ -17,7 +17,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue paymentStatusQueue() {
-        return QueueBuilder.durable(PAYMENT_STATUS_QUEUE).build();
+        return QueueBuilder.durable(PAYMENT_QUEUE).build();
     }
 
     @Bean
@@ -25,6 +25,6 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(paymentStatusQueue())
                 .to(paymentExchange())
-                .with(PAYMENT_STATUS_ROUTING_KEY);
+                .with(PAYMENT_ROUTING_KEY);
     }
 }

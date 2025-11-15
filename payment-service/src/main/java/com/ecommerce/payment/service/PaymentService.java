@@ -7,7 +7,7 @@ import com.ecommerce.payment.dto.PaymentStatusDto;
 import com.ecommerce.payment.dto.Response;
 import com.ecommerce.payment.entity.Payment;
 import com.ecommerce.payment.enums.PaymentStatus;
-import com.ecommerce.payment.event.PaymentStatusChangedEvent;
+import com.ecommerce.payment.event.PaymentStatusEvent;
 import com.ecommerce.payment.mapper.PaymentMapper;
 import com.ecommerce.payment.repo.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,20 +32,20 @@ public class PaymentService {
                 dto.getOrderId(),
                 dto.getUserId(),
                 dto.getAmount(),
-                PaymentStatus.SUCCESS,
+                PaymentStatus.PAID,
                 dto.getMethod()
         ));
 
-        PaymentStatusChangedEvent statusEvent = new PaymentStatusChangedEvent(
+        PaymentStatusEvent statusEvent = new PaymentStatusEvent(
                 payment.getId(),
                 payment.getOrderId(),
                 payment.getUserId(),
-                payment.getStatus().name(),
+                payment.getStatus(),
                 payment.getFailureReason());
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.PAYMENT_EXCHANGE,
-                "payment.status.changed",
+                RabbitMQConfig.PAYMENT_ROUTING_KEY,
                 statusEvent
         );
 

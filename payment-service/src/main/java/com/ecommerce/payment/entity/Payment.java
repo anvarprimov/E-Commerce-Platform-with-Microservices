@@ -17,13 +17,13 @@ import java.sql.Timestamp;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false)
-    private Long orderId;
+    private long orderId;
 
     @Column(nullable = false)
-    private Long userId;
+    private String userId;
 
     @Column(nullable = false, scale = 2, precision = 19)
     private BigDecimal amount;
@@ -46,7 +46,7 @@ public class Payment {
     @UpdateTimestamp
     private Timestamp updatedAt;
 
-    public Payment(Long orderId, Long userId, BigDecimal amount, PaymentStatus status, PaymentMethod method) {
+    public Payment(long orderId, String userId, BigDecimal amount, PaymentStatus status, PaymentMethod method) {
         this.orderId = orderId;
         this.userId = userId;
         this.amount = amount;

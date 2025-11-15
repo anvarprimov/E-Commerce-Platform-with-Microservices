@@ -1,4 +1,4 @@
-package com.ecommerce.order.dto;
+package com.ecommerce.order.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

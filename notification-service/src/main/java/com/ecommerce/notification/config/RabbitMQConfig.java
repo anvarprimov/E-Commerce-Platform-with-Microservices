@@ -5,38 +5,29 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
-    /*@Value("${notification.amqp.exchange}") private String exchangeName;
-    @Value("${notification.amqp.queues.notifications}") private String queueName;
-    @Value("${notification.amqp.routing-keys.default}") private String routingKey;*/
-    @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
-
-    @Value("${rabbitmq.queue.name}")
-    private String queueName;
-
-    @Value("${rabbitmq.routing.key}")
-    private String routingKey;
+    public static final String NOTIFICATION_QUEUE = "notification.queue";
+    public static final String NOTIFICATION_EXCHANGE = "notification.exchange";
+    public static final String NOTIFICATION_ROUTING_KEY = "notification.order.#";
 
     @Bean
     public Queue queue() {
-        return QueueBuilder.durable(queueName).build();
+        return QueueBuilder.durable(NOTIFICATION_QUEUE).build();
     }
     @Bean
     public TopicExchange exchange() {
-        return ExchangeBuilder.topicExchange(exchangeName).durable(true).build();
+        return ExchangeBuilder.topicExchange(NOTIFICATION_EXCHANGE).durable(true).build();
     }
     @Bean
     public Binding binding() {
         return BindingBuilder
                 .bind(queue())
                 .to(exchange())
-                .with(routingKey);
+                .with(NOTIFICATION_ROUTING_KEY);
     }
 
     @Bean

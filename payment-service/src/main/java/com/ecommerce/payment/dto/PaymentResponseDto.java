@@ -8,10 +8,9 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentResponseDto {
-    private Long id;
-    private String paymentId;
-    private Long orderId;
-    private Long userId;
+    private long id;
+    private long orderId;
+    private long userId;
     private BigDecimal amount;
     private String status;
     private String method;
