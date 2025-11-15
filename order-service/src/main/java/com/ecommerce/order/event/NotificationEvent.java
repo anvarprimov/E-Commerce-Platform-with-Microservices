@@ -1,5 +1,6 @@
 package com.ecommerce.order.event;
 
+import com.ecommerce.order.enums.Channel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +15,5 @@ public class NotificationEvent {
     private String userId;
     private String title;
     private String body;
-    private String channel;
+    private Channel channel;
 }

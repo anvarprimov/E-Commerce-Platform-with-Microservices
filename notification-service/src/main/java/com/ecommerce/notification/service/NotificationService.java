@@ -4,6 +4,7 @@ import com.ecommerce.notification.dto.*;
 import com.ecommerce.notification.entity.Notification;
 import com.ecommerce.notification.enums.Channel;
 import com.ecommerce.notification.enums.Status;
+import com.ecommerce.notification.event.NotificationEvent;
 import com.ecommerce.notification.mapper.NotificationMapper;
 import com.ecommerce.notification.repository.NotificationRepository;
 import com.ecommerce.notification.service.channel.EmailProvider;
@@ -44,7 +45,7 @@ public class NotificationService {
                 .userId(event.getUserId())
                 .title(event.getTitle())
                 .body(event.getBody())
-                .channel(parseChannel(event.getChannel()))
+                .channel(event.getChannel())
                 .status(Status.PENDING)
                 .build();
         deliver(notification);
@@ -66,12 +67,6 @@ public class NotificationService {
         }
         notificationRepository.save(notification);
     }
-
-    private Channel parseChannel(String s) {
-        try { return s==null? Channel.EMAIL : Channel.valueOf(s); }
-        catch (Exception ignored) { return Channel.EMAIL; }
-    }
-
 
     public PageResponse getAll(String userId, int page, int size) {
         log.info(userId);

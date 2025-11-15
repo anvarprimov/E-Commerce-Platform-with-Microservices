@@ -1,11 +1,9 @@
-package com.ecommerce.notification.dto;
+package com.ecommerce.notification.event;
 
+import com.ecommerce.notification.enums.Channel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -14,5 +12,5 @@ public class NotificationEvent {
     private String userId;
     private String title;
     private String body;
-    private String channel;
+    private Channel channel;
 }

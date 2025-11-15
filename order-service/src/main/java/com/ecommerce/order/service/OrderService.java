@@ -6,6 +6,7 @@ import com.ecommerce.order.config.RabbitMQConfig;
 import com.ecommerce.order.dto.*;
 import com.ecommerce.order.entity.Order;
 import com.ecommerce.order.entity.OrderItem;
+import com.ecommerce.order.enums.Channel;
 import com.ecommerce.order.enums.OrderStatus;
 import com.ecommerce.order.enums.PaymentMethod;
 import com.ecommerce.order.enums.PaymentStatus;
@@ -97,7 +98,7 @@ public class OrderService {
                         ", order total price = " + order.getTotal() +
                         ", order creation date = " + order.getCreatedAt() +
                         ", estimated delivery date is within three business days",
-                "EMAIL"
+                Channel.IN_APP
         );
         sendMessage(event);
 
@@ -144,7 +145,7 @@ public class OrderService {
                         ", order total price = " + order.getTotal() +
                         ", order creation date = " + order.getCreatedAt() +
                         ", you will receive refund within three business days",
-                "EMAIL"
+                Channel.IN_APP
         );
         sendMessage(event);
 
@@ -203,7 +204,7 @@ public class OrderService {
                         ", order total price = " + order.getTotal() +
                         ", order creation date = " + order.getCreatedAt() +
                         ", order has been " + order.getStatus().toString(),
-                "EMAIL"
+                Channel.IN_APP
         );
         sendMessage(event);
     }

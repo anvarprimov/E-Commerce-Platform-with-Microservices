@@ -1,7 +1,7 @@
 package com.ecommerce.notification.listener;
 
 import com.ecommerce.notification.config.RabbitMQConfig;
-import com.ecommerce.notification.dto.NotificationEvent;
+import com.ecommerce.notification.event.NotificationEvent;
 import com.ecommerce.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
