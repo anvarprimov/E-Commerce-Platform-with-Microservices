@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class OrderService {
                 event);
     }
 
+    @Transactional
     public Response<Object> create(String userId, OrderRequestDto dto) {
         Response<List<OrderItemDto>> response;
         try {
@@ -85,7 +87,7 @@ public class OrderService {
                 order.getPaymentMethod()
         ));
 
-        order.setPaymentId(paymentResponseDto.getPaymentId());
+        order.setPaymentId(paymentResponseDto.getId());
         orderRepository.save(order);
 
         NotificationEvent event = new NotificationEvent(

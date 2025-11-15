@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class PaymentStatusEvent {
     private long paymentId;
     private Long orderId;
-    private Long userId;
+    private String userId;
     private PaymentStatus status;
     private String failureReason;
 }

@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class PaymentResponseDto {
     private long id;
-    private long paymentId;
     private long orderId;
     private String userId;
     private BigDecimal amount;

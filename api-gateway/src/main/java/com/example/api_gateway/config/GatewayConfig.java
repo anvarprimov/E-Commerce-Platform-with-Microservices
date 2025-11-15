@@ -77,10 +77,10 @@ public class GatewayConfig {
 
                 .route("order-service", r -> r
                         .path("/api/orders/**")
-                        .filters(f -> f.tokenRelay()
-                                .requestRateLimiter(config -> config.
-                                setRateLimiter(redisRateLimiter())
-                                .setKeyResolver(userKeyResolver())))
+                        .filters(f -> f.tokenRelay())
+//                                .requestRateLimiter(config -> config.
+//                                setRateLimiter(redisRateLimiter())
+//                                .setKeyResolver(userKeyResolver()))
                         .uri("lb://ORDER-SERVICE"))
                 .route("order-service-admin", r -> r
                         .path("/admin/orders/**")
@@ -99,6 +99,15 @@ public class GatewayConfig {
                         .path("/notification/v3/api-docs")
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://NOTIFICATION-SERVICE"))
+
+                .route("payment-service", r -> r
+                        .path("/api/payments/**")
+                        .filters(GatewayFilterSpec::tokenRelay)
+                        .uri("lb://PAYMENT-SERVICE"))
+                .route("payment-service-docs", r -> r
+                        .path("/payment/v3/api-docs")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("lb://PAYMENT-SERVICE"))
                 .build();
     }
 }

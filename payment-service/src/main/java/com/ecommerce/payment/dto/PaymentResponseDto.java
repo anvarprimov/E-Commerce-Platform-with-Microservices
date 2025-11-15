@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 public class PaymentResponseDto {
     private long id;
     private long orderId;
-    private long userId;
+    private String userId;
     private BigDecimal amount;
     private String status;
     private String method;

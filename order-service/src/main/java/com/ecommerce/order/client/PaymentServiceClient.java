@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(value = "payment-service", configuration = FeignSecurityConfig.class)
 public interface PaymentServiceClient {
-    @PostMapping
+    @PostMapping("/api/payments")
     @PreAuthorize(value = "hasAnyRole('ADMIN', 'USER')")
     PaymentResponseDto createPayment(@Valid @RequestBody PaymentRequestDto dto);
 }

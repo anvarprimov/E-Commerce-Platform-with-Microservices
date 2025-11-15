@@ -53,23 +53,22 @@ public class PaymentService {
     }
 
     @Transactional(readOnly = true)
-    public Response<PaymentResponseDto> getByPayment(String paymentId) {
-        Optional<Payment> optionalPayment = paymentRepository.findByPaymentId(paymentId);
+    public Response<PaymentResponseDto> getByPayment(long paymentId) {
+        Optional<Payment> optionalPayment = paymentRepository.findById(paymentId);
         return optionalPayment.map(payment -> Response.okData(paymentMapper.toPaymentResponseDto(payment))).orElseGet(() -> Response.fail("Payment not found"));
     }
 
     @Transactional(readOnly = true)
-    public Response<List<PaymentResponseDto>> getByOrder(Long orderId) {
-        List<PaymentResponseDto> dtoList = paymentRepository.findByOrderId(orderId)
+    public List<PaymentResponseDto> getByOrder(Long orderId) {
+        return paymentRepository.findByOrderId(orderId)
                 .stream()
                 .map(paymentMapper::toPaymentResponseDto)
                 .toList();
-        return dtoList.isEmpty() ? Response.okData(dtoList) : Response.fail("Not found");
     }
 
     @Transactional(readOnly = true)
-    public Response<PaymentStatusDto> getStatus(String paymentId) {
-        Optional<Payment> optionalPayment = paymentRepository.findByPaymentId(paymentId);
+    public Response<PaymentStatusDto> getStatus(long paymentId) {
+        Optional<Payment> optionalPayment = paymentRepository.findById(paymentId);
         return optionalPayment.map(payment -> Response.okData(
                 new PaymentStatusDto(
                         paymentId,

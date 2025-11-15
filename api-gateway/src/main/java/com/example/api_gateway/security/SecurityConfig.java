@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 "/cart/v3/api-docs/**",
                                 "/order/v3/api-docs/**",
                                 "/notification/v3/api-docs/**",
+                                "/payment/v3/api-docs/**",
                                 "/api/users/register",
                                 "/login/**", "/oauth2/**"
                         ).permitAll()

@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentStatusDto {
-    private String paymentId;
+    private long id;
     private String status;
     private String failureReason;
 }

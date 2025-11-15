@@ -27,7 +27,7 @@ public class PaymentController {
     @GetMapping("/test")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public String test() {
-        return "order port: " + port;
+        return "payment port: " + port;
     }
 
     @PostMapping
@@ -38,21 +38,20 @@ public class PaymentController {
 
     @GetMapping("/{paymentId}")
     @PreAuthorize(value = "hasAnyRole('ADMIN', 'USER')")
-    public HttpEntity<?> getByPayment(@PathVariable String paymentId) {
+    public HttpEntity<?> getByPayment(@PathVariable long paymentId) {
         Response<PaymentResponseDto> response = paymentService.getByPayment(paymentId);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
 
     @GetMapping("/order/{orderId}")
     @PreAuthorize(value = "hasAnyRole('ADMIN', 'USER')")
-    public HttpEntity<?> getByOrder(@PathVariable Long orderId) {
-        Response<List<PaymentResponseDto>> response = paymentService.getByOrder(orderId);
-        return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
+    public List<PaymentResponseDto> getByOrder(@PathVariable Long orderId) {
+        return paymentService.getByOrder(orderId);
     }
 
     @GetMapping("/status/{paymentId}")
     @PreAuthorize(value = "hasAnyRole('ADMIN', 'USER')")
-    public HttpEntity<?> getStatus(@PathVariable String paymentId) {
+    public HttpEntity<?> getStatus(@PathVariable long paymentId) {
         Response<PaymentStatusDto> response = paymentService.getStatus(paymentId);
         return ResponseEntity.status(response.isSuccess() ? 200 : 409).body(response);
     }
