@@ -176,7 +176,8 @@ Feel free to submit issues or PRs.
 
 ## 📝 License
 
-MIT License.
+No license has been selected yet. This project is currently not licensed for public or commercial use.
+
 
 ---
 
